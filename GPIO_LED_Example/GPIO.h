@@ -22,7 +22,7 @@ public:
 	GPIO(int pin);
 	~GPIO();
 
-	void setPinProperties(string fileName, string value);
+	void setPinAttributes(string fileName, string value);
 };
 
 #endif /* H_GPIO_H_ */

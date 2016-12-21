@@ -27,7 +27,7 @@ GPIO::~GPIO()
  * fileName: The file that will be modified.
  * value: The value that will be written into fileName.
  */
-void GPIO::setPinProperties(string fileName, string value)
+void GPIO::setPinAttributes(string fileName, string value)
 {
 	writeToFile(this->gpioPinPath, fileName, value);
 }

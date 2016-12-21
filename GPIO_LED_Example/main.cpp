@@ -13,20 +13,20 @@ int main()
 {
 	GPIO led(49);
 
-	led.setPinProperties("direction", "out");
+	led.setPinAttributes("direction", "out");
 
 	for (int i = 0; i < 5; i++)
 	{
 		for(int j = 0; j < 5; j++)
 		{
-			led.setPinProperties("value", "1");
+			led.setPinAttributes("value", "1");
 			usleep(100000); // Sleep for 0.1 seconds
 
-			led.setPinProperties("value", "0");
+			led.setPinAttributes("value", "0");
 			usleep(100000); // Sleep for 0.1 seconds
 		}
 
-		led.setPinProperties("value", "1");
+		led.setPinAttributes("value", "1");
 		usleep(1000000);	// Sleep for 1 second
 	}
 
