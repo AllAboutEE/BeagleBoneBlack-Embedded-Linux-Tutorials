@@ -16,6 +16,7 @@ private:
 	const string gpioPath = "/sys/class/gpio/";
 
 	void writeToFile(string path, string fileName, string value);
+	string readFromFile(string path, string filename);
 	void setUnsetGPIO(string fileName);
 
 public:
@@ -23,6 +24,7 @@ public:
 	~GPIO();
 
 	void setPinAttributes(string fileName, string value);
+	string getPinAttributes(string fileName);
 };
 
 #endif /* H_GPIO_H_ */

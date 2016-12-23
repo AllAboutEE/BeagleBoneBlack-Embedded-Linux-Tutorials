@@ -8,8 +8,6 @@
 #include <sys/epoll.h>
 #include <stdlib.h>
 
-
-
 using namespace std;
 
 
@@ -21,6 +19,7 @@ private:
 	const string gpioPath = "/sys/class/gpio/";
 
 	void writeToFile(string path, string fileName, string value);
+	string readFromFile(string path, string filename);
 	void setUnsetGPIO(string fileName);
 
 public:
@@ -28,6 +27,7 @@ public:
 	~GPIO();
 
 	void setPinAttributes(string fileName, string value);
+	string getPinAttributes(string fileName);
 	void edgeListen();
 };
 

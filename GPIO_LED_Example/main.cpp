@@ -26,8 +26,11 @@ int main()
 			usleep(100000); // Sleep for 0.1 seconds
 		}
 
+		cout << "Value: " << led.getPinAttributes("value") << endl;
 		led.setPinAttributes("value", "1");
-		usleep(1000000);	// Sleep for 1 second
+		cout << "Value: " << led.getPinAttributes("value") << endl << endl;
+
+		sleep(1);	// Sleep for 1 second
 	}
 
 	   return 0;

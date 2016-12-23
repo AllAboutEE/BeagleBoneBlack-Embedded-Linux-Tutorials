@@ -12,18 +12,19 @@ using namespace std;
 
 int main()
 {
-	GPIO gpioOut(49);	// LED
-	GPIO gpioIn(115);	// Button
+	GPIO led(49);
+	GPIO button(115);
 
-	gpioOut.setPinAttributes("direction", "out");	// Set the LED as an output
+	/* Configure LED */
+	led.setPinAttributes("direction", "out");		// Set the LED as an output
 
-	gpioIn.setPinAttributes("direction", "in");		// Set the button as an input
-	gpioIn.setPinAttributes("edge", "rising");		// Set trigger on the rising edge
+	/* Configure button */
+	button.setPinAttributes("direction", "in");		// Set the button as an input
+	button.setPinAttributes("edge", "rising");		// Set trigger on the rising edge
 
-	cout << "Waiting on button press: " << endl;
-
-	gpioIn.edgeListen();							// Wait for ever until a trigger is detected
-	gpioOut.setPinAttributes("value", "1");			// Turn LED on, on edge trigger
+	cout << "Press the button: " << endl;
+	button.edgeListen();							// Wait for ever until a trigger is detected
+	led.setPinAttributes("value", "1");				// Turn LED on, on edge trigger
 	sleep(1);
 
 	return 0;

@@ -10,7 +10,7 @@ GPIO::GPIO(int pin) : gpioPin(pin)
 	this->gpioPinPath = gpioPath + gpioPinName + "/";
 
 	setUnsetGPIO("export");
-	usleep(1000000);
+	sleep(1);
 }
 
 /*
@@ -22,14 +22,56 @@ GPIO::~GPIO()
 }
 
 /*
- * Modify the files associated with the gpio pin (e.g. value, edge, direction).
+ * Write to one of the files located under /sys/class/gpio/
  *
+ * path: The location of the file that will be modified.
  * fileName: The file that will be modified.
  * value: The value that will be written into fileName.
  */
-void GPIO::setPinAttributes(string fileName, string value)
+void GPIO::writeToFile(string path, string fileName, string value)
 {
-	writeToFile(this->gpioPinPath, fileName, value);
+	ofstream fileSystem;
+	fileSystem.open((path + fileName).c_str());
+
+	if(fileSystem.is_open())
+	{
+		// The file was successfully opened
+		fileSystem << value;
+		fileSystem.close();
+	}
+	else
+	{
+		// The file was not successfully opened
+		perror("Error");
+	}
+}
+
+/*
+ * Read from one of the files located under /sys/class/gpio/
+ *
+ * path: The location of the file that will be read.
+ * fileName: The file that will be read.
+ */
+string GPIO::readFromFile(string path, string filename)
+{
+   ifstream fileStream;
+   string fileContent;
+
+   fileStream.open((path + filename).c_str());
+
+   if(fileStream.is_open())
+   {
+	   //The file was successfully opened
+	   getline(fileStream,fileContent);
+	   fileStream.close();
+   }
+   else
+   {
+	   // The file was not successfully opened
+	   perror("GPIO: read failed to open file ");
+   }
+
+   return fileContent;
 }
 
 /*
@@ -43,7 +85,28 @@ void GPIO::setUnsetGPIO(string fileName)
 }
 
 /*
- * Listen for an event (that causes a change in edge) to occur
+ * Modify the file associated with the gpio pin (e.g. value, edge, direction).
+ *
+ * fileName: The file that will be modified.
+ * value: The value that will be written into fileName.
+ */
+void GPIO::setPinAttributes(string fileName, string value)
+{
+	writeToFile(this->gpioPinPath, fileName, value);
+}
+
+/*
+ * Get the contents of a file associated with the gpio pin (e.g. value, edge, direction).
+ *
+ * fileName: The file who's contents will be read
+ */
+string GPIO::getPinAttributes(string fileName)
+{
+	return readFromFile(this->gpioPinPath, fileName);
+}
+
+/*
+ * Listen for an event (that causes a change in edge) to occur.
  */
 void GPIO::edgeListen()
 {
@@ -105,29 +168,4 @@ void GPIO::edgeListen()
 	}
 
     close(fd);
-}
-
-/*
- * Write to one of the files located under /sys/class/gpio/
- *
- * path: The location of the file that will be modified.
- * fileName: The file that will be modified.
- * value: The value that will be written into fileName.
- */
-void GPIO::writeToFile(string path, string fileName, string value)
-{
-	ofstream fileSystem;
-	fileSystem.open((path + fileName).c_str());
-
-	if(fileSystem.is_open())
-	{
-		// The file was successfully opened
-		fileSystem << value;
-		fileSystem.close();
-	}
-	else
-	{
-		// The file was not successfully opened
-		perror("Error");
-	}
 }
