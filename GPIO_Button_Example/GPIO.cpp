@@ -30,19 +30,20 @@ GPIO::~GPIO()
  */
 void GPIO::writeToFile(string path, string fileName, string value)
 {
-	ofstream fileSystem;
-	fileSystem.open((path + fileName).c_str());
+	ofstream fileStream;
+	fileStream.open((path + fileName).c_str());
 
-	if(fileSystem.is_open())
+	if(fileStream.is_open())
 	{
 		// The file was successfully opened
-		fileSystem << value;
-		fileSystem.close();
+		fileStream << value;
+		fileStream.close();
 	}
 	else
 	{
 		// The file was not successfully opened
-		perror("Error");
+		perror("open");
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -68,7 +69,8 @@ string GPIO::readFromFile(string path, string filename)
    else
    {
 	   // The file was not successfully opened
-	   perror("GPIO: read failed to open file ");
+	   perror("open");
+	   exit(EXIT_FAILURE);
    }
 
    return fileContent;
