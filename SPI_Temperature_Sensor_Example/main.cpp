@@ -1,3 +1,8 @@
+/*
+ * This program controls the M_ID and TEMP registers of the Temperature Sensor (TC77)
+ * to read the manufacturer id and temperature.
+ */
+
 #include <iostream>
 #include <unistd.h>
 #include <math.h>
