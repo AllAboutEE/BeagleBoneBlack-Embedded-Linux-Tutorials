@@ -22,6 +22,7 @@
 
 using namespace std;
 
+//TODO: Create function to export the DTOs
 class SPI
 {
 private:
