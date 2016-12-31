@@ -64,7 +64,6 @@ void PWM::writeToFile(string path, string filename, int value)
 	ofstream fileStream;
 	string fileName = to_string(value);
 
-	std::cout << "writeToFile" << std::endl;
 	fileStream.open((path + filename).c_str());
 
 	if(fileStream.is_open())
@@ -110,7 +109,6 @@ void PWM::deployOverlay(string overlay)
 {
 	ofstream fileStream;
 
-	std::cout << "deployOverlay" << std::endl;
 	fileStream.open(this->slotsPath.c_str());
 
 	if(fileStream.is_open())
