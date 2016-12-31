@@ -105,6 +105,11 @@ string PWM::readFromFile(string path, string filename)
 	return value;
 }
 
+/*
+ * Deploys the DTO necessary to work with PWM pins.
+ *
+ * overlay: The name of the DTO to be deployed.
+ */
 void PWM::deployOverlay(string overlay)
 {
 	ofstream fileStream;
