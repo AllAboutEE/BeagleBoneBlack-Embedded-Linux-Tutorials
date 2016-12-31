@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-	PWM buzzer("pwm_test_P9_22.12");
+	PWM buzzer("bone_pwm_P9_22", "pwm_test_P9_22.12");
 
 	buzzer.setPinAttributes("run", 1);
 	buzzer.setPinAttributes("duty", (unsigned int) 50 * 100);

@@ -3,14 +3,12 @@
 /*
  * Constructor
  */
-PWM::PWM(string pinName)
+PWM::PWM(string dto, string pinName) : pwmPin(pinName)
 {
-	this->pwmOverlay = "bone_pwm_P9_22";
-	this->pwmPin = pinName;
 	this->pwmPinPath = this->pwmPath + this->pwmPin + "/";
 
-	deployOverlay(this->pwmOverlay);
 	deployOverlay(this->amOverlay);
+	deployOverlay(dto);
 
 	usleep(250000); // Delay to allow the setup of sysfs
 }
@@ -20,36 +18,6 @@ PWM::PWM(string pinName)
  */
 PWM::~PWM()
 {
-	setPinAttributes("run", 0);
-}
-
-/*
- * Sets the:
- * 	- period
- * 	- duty
- * 	- polarity
- * 	- run
- *
- * 	attributes: The pin's properties that will be modified
- * 	value: The value that will be assigned to the pin's properties
- */
-void PWM::setPinAttributes(string attributes, unsigned int value)
-{
-	writeToFile(this->pwmPinPath, attributes, value);
-}
-
-/*
- * Gets the:
- * 	- period
- * 	- duty
- * 	- polarity
- * 	- run
- *
- * 	attributes: The pin's properties that will be retreived
- */
-int PWM::getPinAttributes(string attributes)
-{
-	return atoi(readFromFile(this->pwmPinPath, attributes).c_str());	// cat ./period
 }
 
 /*
@@ -126,4 +94,33 @@ void PWM::deployOverlay(string overlay)
 		perror("open - deployOverlay");
 		exit(EXIT_FAILURE);
 	}
+}
+
+/*
+ * Sets the:
+ * 	- period
+ * 	- duty
+ * 	- polarity
+ * 	- run
+ *
+ * 	attributes: The pin's properties that will be modified
+ * 	value: The value that will be assigned to the pin's properties
+ */
+void PWM::setPinAttributes(string attributes, unsigned int value)
+{
+	writeToFile(this->pwmPinPath, attributes, value);
+}
+
+/*
+ * Gets the:
+ * 	- period
+ * 	- duty
+ * 	- polarity
+ * 	- run
+ *
+ * 	attributes: The pin's properties that will be retreived
+ */
+int PWM::getPinAttributes(string attributes)
+{
+	return atoi(readFromFile(this->pwmPinPath, attributes).c_str());	// cat ./period
 }
