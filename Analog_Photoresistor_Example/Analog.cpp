@@ -9,6 +9,7 @@ Analog::Analog(void)
 {
 	this->overlay = "BB-ADC";
 
+	checkVersion();
 	setAnalog();
 
 	usleep(250000); // Delay to allow the setup of sysfs
@@ -80,5 +81,24 @@ void Analog::setAnalog()
 	{
 		perror("open");
 		exit(EXIT_FAILURE);
+	}
+}
+
+/*
+ * Check the version of the BBB being used.
+ * The path to slots is different between version 7.11 (wheezy) and 8.6 (jessie)
+ */
+void Analog::checkVersion()
+{
+	ifstream myFile;
+	string osRelease = "/etc/os-release";
+	string input;
+
+	myFile.open(osRelease.c_str());
+	getline(myFile, input);
+
+	if( input.find("jessie") != string::npos)
+	{
+		slotsPath = "/sys/devices/platform/bone_capemgr/slots";
 	}
 }

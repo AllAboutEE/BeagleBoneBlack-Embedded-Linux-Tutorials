@@ -15,10 +15,11 @@ class Analog
 private:
 	string overlay;
 	const string devicesPath = "/sys/bus/iio/devices";
-	const string slotsPath = "/sys/devices/bone_capemgr.9/slots";	//TODO: Make compatible with jessie - /sys/devices/platform/bone_capemgr/slots
+	string slotsPath = "/sys/devices/bone_capemgr.9/slots";
 
 	int readFromFile(string fileName);
 	void setAnalog();
+	void checkVersion();
 
 public:
 	Analog();
