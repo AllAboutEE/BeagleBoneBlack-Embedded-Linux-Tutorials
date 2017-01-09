@@ -34,12 +34,14 @@ private:
 	string pwmPin;
 	string pwmPinPath;
 	const string amOverlay = "am33xx_pwm";
-	const string slotsPath = "/sys/devices/bone_capemgr.9/slots";
 	const string pwmPath = "/sys/devices/ocp.3/";
+	string slotsPath = "/sys/devices/bone_capemgr.9/slots";
+
 
 	void writeToFile(string path, string filename, int value);
 	string readFromFile(string path, string filename);
 	void deployOverlay(string overlay);
+	void checkVersion();
 
 public:
 

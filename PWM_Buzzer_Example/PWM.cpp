@@ -1,5 +1,6 @@
 #include "PWM.h"
 
+//TODO: This code does not work on BBB 8.6 (Jessie) because the DTO is different from that of 7.11(Wheezy) FIX!!
 /*
  * Constructor
  */
@@ -7,6 +8,7 @@ PWM::PWM(string dto, string pinName) : pwmPin(pinName)
 {
 	this->pwmPinPath = this->pwmPath + this->pwmPin + "/";
 
+	checkVersion();
 	deployOverlay(this->amOverlay);
 	deployOverlay(dto);
 
@@ -123,4 +125,23 @@ void PWM::setPinAttributes(string attributes, unsigned int value)
 int PWM::getPinAttributes(string attributes)
 {
 	return atoi(readFromFile(this->pwmPinPath, attributes).c_str());	// cat ./period
+}
+
+/*
+ * Check the version of the BBB being used.
+ * The path to slots is different between version 7.11 (wheezy) and 8.6 (jessie)
+ */
+void PWM::checkVersion()
+{
+	ifstream myFile;
+	string osRelease = "/etc/os-release";
+	string input;
+
+	myFile.open(osRelease.c_str());
+	getline(myFile, input);
+
+	if( input.find("jessie") != string::npos)
+	{
+		slotsPath = "/sys/devices/platform/bone_capemgr/slots";
+	}
 }
