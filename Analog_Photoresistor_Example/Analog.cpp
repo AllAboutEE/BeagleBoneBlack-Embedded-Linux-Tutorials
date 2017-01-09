@@ -10,6 +10,8 @@ Analog::Analog(void)
 	this->overlay = "BB-ADC";
 
 	setAnalog();
+
+	usleep(250000); // Delay to allow the setup of sysfs
 }
 
 /*
