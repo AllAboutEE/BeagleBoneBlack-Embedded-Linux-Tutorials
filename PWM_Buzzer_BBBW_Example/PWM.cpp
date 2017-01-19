@@ -6,13 +6,12 @@
  */
 PWM::PWM(string dto, string pinName) : pwmPin(pinName)
 {
-	this->pwmPinPath = this->pwmPath + this->pwmPin + "/";
+	this->pwmPinPath = this->pwmPath + "pwmchip0/" + this->pwmPin + "/";
 
-	checkVersion();
-	deployOverlay(this->amOverlay);
 	deployOverlay(dto);
-
 	usleep(250000); // Delay to allow the setup of sysfs
+	writeToFile(this->pwmPath + "pwmchip0/", "export", 0);
+//	usleep(250000);
 }
 
 /*
@@ -32,18 +31,21 @@ PWM::~PWM()
 void PWM::writeToFile(string path, string filename, int value)
 {
 	ofstream fileStream;
-	string fileName = to_string(value);
+	string valueToWrite = to_string(value);
 
 	fileStream.open((path + filename).c_str());
 
 	if(fileStream.is_open())
 	{
-		fileStream << fileName;
+		fileStream << valueToWrite;
 		fileStream.close();
 	}
 	else
 	{
 		perror("open - writeToFile");
+		std::cout << "Path opened: " << path + filename << std::endl;
+		std::cout << "Value: " << valueToWrite << std::endl;
+
 		exit(EXIT_FAILURE);
 	}
 }
@@ -82,14 +84,14 @@ string PWM::readFromFile(string path, string filename)
  */
 void PWM::deployOverlay(string overlay)
 {
-	ofstream fileStream;
+	ofstream myPwmFile;
 
-	fileStream.open(this->slotsPath.c_str());
+	myPwmFile.open(this->slotsPath.c_str());
 
-	if(fileStream.is_open())
+	if(myPwmFile.is_open())
 	{
-		fileStream << overlay;
-		fileStream.close();
+		myPwmFile << overlay;
+		myPwmFile.close();
 	}
 	else
 	{
@@ -100,10 +102,10 @@ void PWM::deployOverlay(string overlay)
 
 /*
  * Sets the:
+ * 	- duty_cycle
+ * 	- enable
  * 	- period
- * 	- duty
  * 	- polarity
- * 	- run
  *
  * 	attributes: The pin's properties that will be modified
  * 	value: The value that will be assigned to the pin's properties
@@ -116,7 +118,7 @@ void PWM::setPinAttributes(string attributes, unsigned int value)
 /*
  * Gets the:
  * 	- period
- * 	- duty
+ * 	- duty_cycle
  * 	- polarity
  * 	- run
  *
@@ -125,23 +127,4 @@ void PWM::setPinAttributes(string attributes, unsigned int value)
 int PWM::getPinAttributes(string attributes)
 {
 	return atoi(readFromFile(this->pwmPinPath, attributes).c_str());	// cat ./period
-}
-
-/*
- * Check the version of the BBB being used.
- * The path to slots is different between version 7.11 (wheezy) and 8.6 (jessie)
- */
-void PWM::checkVersion()
-{
-	ifstream myFile;
-	string osRelease = "/etc/os-release";
-	string input;
-
-	myFile.open(osRelease.c_str());
-	getline(myFile, input);
-
-	if( input.find("jessie") != string::npos)
-	{
-		slotsPath = "/sys/devices/platform/bone_capemgr/slots";
-	}
 }

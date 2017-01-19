@@ -8,23 +8,20 @@ using namespace std;
 
 int main()
 {
-	PWM buzzer("bone_pwm_P9_22", "pwm_test_P9_22.12");
+	PWM buzzer("BB-PWM0", "pwm0");
 
-	buzzer.setPinAttributes("run", 1);
-	buzzer.setPinAttributes("duty", (unsigned int) 50 * 100);
-
-	for(int i = 0; i < 8000; i = i+100)
-	{
-		buzzer.setPinAttributes("period", (unsigned int) ((1.0/float(i)) * pow(10,9)));
-		usleep((0.1)*1000000);
-	}
+	buzzer.setPinAttributes("enable", 1);
+	buzzer.setPinAttributes("period", (unsigned int) 10000000);
+	buzzer.setPinAttributes("duty_cycle", (unsigned int) 5000000);
 
 	cout << "  Period: " << buzzer.getPinAttributes("period") << endl;
-	cout << "    Duty: " << buzzer.getPinAttributes("duty") << endl;
+	cout << "    Duty: " << buzzer.getPinAttributes("duty_cycle") << endl;
 	cout << "Polarity: " << buzzer.getPinAttributes("polarity") << endl;
-	cout << "     Run: " << buzzer.getPinAttributes("run") << endl;
+	cout << "  Enable: " << buzzer.getPinAttributes("enable") << endl;
 
-	buzzer.setPinAttributes("run", 0);
+	sleep(5);
+
+	buzzer.setPinAttributes("enable", 0);
 
 	return 0;
 }
