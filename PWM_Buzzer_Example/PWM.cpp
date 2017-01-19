@@ -6,13 +6,25 @@
  */
 PWM::PWM(string dto, string pinName) : pwmPin(pinName)
 {
-	this->pwmPinPath = this->pwmPath + this->pwmPin + "/";
-
 	checkVersion();
-	deployOverlay(this->amOverlay);
-	deployOverlay(dto);
 
-	usleep(250000); // Delay to allow the setup of sysfs
+	if(version.compare("wheezy") == 0)
+	{
+		this->pwmPinPath = this->pwmPath + this->pwmPin + "/";
+
+		deployOverlay(this->amOverlay);
+		deployOverlay(dto);
+
+		usleep(250000); // Delay to allow the setup of sysfs
+	}
+	else if(version.compare("jessie") == 0)
+	{
+		this->pwmPinPath = this->pwmPath + "pwmchip0/" + this->pwmPin + "/";
+
+		deployOverlay(dto);
+		usleep(250000); // Delay to allow the setup of sysfs
+		writeToFile(this->pwmPath + "pwmchip0/", "export", 0);
+	}
 }
 
 /*
@@ -32,13 +44,13 @@ PWM::~PWM()
 void PWM::writeToFile(string path, string filename, int value)
 {
 	ofstream fileStream;
-	string fileName = to_string(value);
+	string valueToWrite = to_string(value);
 
 	fileStream.open((path + filename).c_str());
 
 	if(fileStream.is_open())
 	{
-		fileStream << fileName;
+		fileStream << valueToWrite;
 		fileStream.close();
 	}
 	else
@@ -82,14 +94,14 @@ string PWM::readFromFile(string path, string filename)
  */
 void PWM::deployOverlay(string overlay)
 {
-	ofstream fileStream;
+	ofstream myPwmFile;
 
-	fileStream.open(this->slotsPath.c_str());
+	myPwmFile.open(this->slotsPath.c_str());
 
-	if(fileStream.is_open())
+	if(myPwmFile.is_open())
 	{
-		fileStream << overlay;
-		fileStream.close();
+		myPwmFile << overlay;
+		myPwmFile.close();
 	}
 	else
 	{
@@ -140,8 +152,16 @@ void PWM::checkVersion()
 	myFile.open(osRelease.c_str());
 	getline(myFile, input);
 
-	if( input.find("jessie") != string::npos)
+	if( input.find("jessie") == string::npos)
 	{
+		version = "wheezy";
+		pwmPath = "/sys/devices/ocp.3/";
+		slotsPath = "/sys/devices/bone_capemgr.9/slots";
+	}
+	else
+	{
+		version = "jessie";
+		pwmPath = "/sys/class/pwm/";
 		slotsPath = "/sys/devices/platform/bone_capemgr/slots";
 	}
 }
