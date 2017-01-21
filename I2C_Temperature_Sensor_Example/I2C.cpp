@@ -40,12 +40,20 @@ void I2C::accessI2CAdapter()
 	else if(this->i2cBus == 1)
 	{
 		swDevice = "/dev/i2c-1";
-		enableI2C1(); //For wheezy version comment
+
+		if(this->version.compare("jessie") == 0)
+		{
+			enableI2C1();
+		}
 	}
 	else
 	{
 		swDevice = "/dev/i2c-2";
-//		enableI2C1(); //For wheezy version uncomment
+
+		if(this->version.compare("wheezy") == 0)
+		{
+			enableI2C1();
+		}
 	}
 
 	this->file = ::open(swDevice.c_str(), O_RDWR);
