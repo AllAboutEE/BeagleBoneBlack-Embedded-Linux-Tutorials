@@ -14,6 +14,7 @@ using namespace std;
  */
 I2C::I2C(unsigned int bus, unsigned int slaveAddress) : i2cBus(bus), i2cSlaveAddress(slaveAddress), file(-1)
 {
+	checkVersion();
 	accessI2CAdapter();
 }
 
@@ -39,11 +40,12 @@ void I2C::accessI2CAdapter()
 	else if(this->i2cBus == 1)
 	{
 		swDevice = "/dev/i2c-1";
+		enableI2C1(); //For wheezy version comment
 	}
 	else
 	{
 		swDevice = "/dev/i2c-2";
-		enableI2C1();
+//		enableI2C1(); //For wheezy version uncomment
 	}
 
 	this->file = ::open(swDevice.c_str(), O_RDWR);
@@ -143,5 +145,30 @@ void I2C::enableI2C1()
 	{
 		perror("open");
 		exit(EXIT_FAILURE);
+	}
+}
+
+/*
+ * Check the version of the BBB being used.
+ * The path to slots is different between version 7.11 (wheezy) and 8.6 (jessie)
+ */
+void I2C::checkVersion()
+{
+	ifstream myFile;
+	string osRelease = "/etc/os-release";
+	string input;
+
+	myFile.open(osRelease.c_str());
+	getline(myFile, input);
+
+	if( input.find("jessie") == string::npos)
+	{
+		version = "wheezy";
+		slotsPath = "/sys/devices/bone_capemgr.9/slots";
+	}
+	else
+	{
+		version = "jessie";
+		slotsPath = "/sys/devices/platform/bone_capemgr/slots";
 	}
 }

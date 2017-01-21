@@ -38,8 +38,9 @@ private:
 	unsigned int i2cBus;
 	unsigned int i2cSlaveAddress;
 	int file;
+	string slotsPath;
 
-	const string slotsPath = "/sys/devices/bone_capemgr.9/slots";
+	void checkVersion();
 
 public:
 	I2C(unsigned int bus, unsigned int slaveAddress);
@@ -49,6 +50,8 @@ public:
 	void i2cSet(unsigned char registerAddress, unsigned char value);
 	unsigned char *i2cGet(unsigned char registerAddress, unsigned int numOfBytes);
 	void enableI2C1();
+
+	string version;
 };
 
 #endif /* H_I2C_H_ */

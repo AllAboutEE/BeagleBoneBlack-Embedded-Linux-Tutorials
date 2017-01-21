@@ -19,7 +19,16 @@ void printRawData(unsigned char* data, unsigned int numOfBytes);
 
 int main()
 {
-	I2C tc77(2, 0x4D);
+	/*
+	 * Jessie:
+	 * P9_18 and P9_17 are controlled by bus 1 (BB-I2C1)
+	 * P9_20 and P9_19 are controlled by bus 2 (default)
+	 *
+	 * Wheezy:
+	 * P9_18 and P9_17 are controlled by bus 2 (BB-I2C1)
+	 * P9_20 and P9_19 are controlled by bus 1 (default)
+	 */
+	I2C tc77(1, 0x4D);		//For BBB wheezy version use bus 2 e.g. tc77(2, 0x4D)
 	unsigned char* data = NULL;
 	unsigned int ambientTemp = 0;
 
