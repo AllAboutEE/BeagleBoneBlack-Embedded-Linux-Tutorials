@@ -19,10 +19,11 @@
 #include <iomanip>
 #include <sstream>
 #include <string.h>
+#include <fstream>
+
 
 using namespace std;
 
-//TODO: Create function to export the DTOs
 /*
  * BB-SPIDEV0
  * CS   - P9_17
@@ -46,10 +47,12 @@ private:
 	uint8_t bitsPerWord;
 	uint32_t clkFreq;
 	uint16_t delay;
+	const string slotsPath = "/sys/devices/platform/bone_capemgr/slots";
 
 	void openSpiDevice(string fileName);
 	void close();
 	void transferData(unsigned char* outgoingData, unsigned char* incomingData, int lenght); // Note: if unsigned char receive = 0x00 is passed as a parameter a segfault will occur unless this function is dclared as virtual
+	void deployOverlay(string overlay);
 
 public:
 	SPI(unsigned int bus, unsigned int chipSeclect);

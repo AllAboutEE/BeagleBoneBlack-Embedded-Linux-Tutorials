@@ -24,7 +24,7 @@ int main()
 	 * Note: If BB-SPIDEV1 (is the only SPI DTO deployed, or deployed before BB-SPIDEV0, set the bus to 1 and cs to 0. e.g. tc77(1.0).
 	 * 		 If BB-SPIDEV1 (is the deployed after BB-SPIDEV0, set the bus to 2 and cs to 0. e.g. tc77(2.0);
 	 */
-	SPI tc77(2,0);
+	SPI tc77(1,0);
 
 	tc77.format(8,SPI_MODE_0);
 	tc77.frequency(100000);
