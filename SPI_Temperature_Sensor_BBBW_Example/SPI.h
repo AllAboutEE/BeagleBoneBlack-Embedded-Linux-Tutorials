@@ -23,6 +23,19 @@
 using namespace std;
 
 //TODO: Create function to export the DTOs
+/*
+ * BB-SPIDEV0
+ * CS   - P9_17
+ * MOSI - P9_18
+ * MISO - P9_21
+ * CLK  - P9_22
+ *
+ * BB-SPIDEV1
+ * CS   - P9_28
+ * MOSI - P9_30
+ * MISO - P9_29
+ * CLK  - P9_31
+ */
 class SPI
 {
 private:
