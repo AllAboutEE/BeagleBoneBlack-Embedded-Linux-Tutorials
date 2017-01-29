@@ -20,6 +20,9 @@ SPI::SPI(unsigned int bus, unsigned int chipSelect) :
 {
 	string spiPath = "/dev/spidev" + to_string(this->spiBus) + "." + to_string(this->spiChipSelect);
 
+	deployOverlay("BB-SPIDEV1");
+	usleep(250000); // Delay to allow the setup of sysfs
+
 	openSpiDevice(spiPath);
 }
 
@@ -29,6 +32,29 @@ SPI::SPI(unsigned int bus, unsigned int chipSelect) :
 SPI::~SPI()
 {
 	close();
+}
+
+/*
+ * Deploys the DTO necessary to work with SPI pins.
+ *
+ * overlay: The name of the DTO to be deployed.
+ */
+void SPI::deployOverlay(string overlay)
+{
+	ofstream mySpiFile;
+
+	mySpiFile.open(this->slotsPath.c_str());
+
+	if(mySpiFile.is_open())
+	{
+		mySpiFile << overlay;
+		mySpiFile.close();
+	}
+	else
+	{
+		perror("open - deployOverlay");
+		exit(EXIT_FAILURE);
+	}
 }
 
 /*

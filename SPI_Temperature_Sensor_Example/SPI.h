@@ -19,17 +19,27 @@
 #include <iomanip>
 #include <sstream>
 #include <string.h>
+#include <fstream>
+
 
 using namespace std;
 
-//TODO: Create function to export the DTOs
+/*
+ * BB-SPIDEV0
+ * CS   - P9_17
+ * MOSI - P9_18
+ * MISO - P9_21
+ * CLK  - P9_22
+ *
+ * BB-SPIDEV1
+ * CS   - P9_28
+ * MOSI - P9_30
+ * MISO - P9_29
+ * CLK  - P9_31
+ */
 class SPI
 {
 private:
-	void openSpiDevice(string fileName);
-	void close();
-	void transferData(unsigned char* outgoingData, unsigned char* incomingData, int lenght); // Note: if unsigned char receive = 0x00 is passed as a parameter a segfault will occur unless this function is dclared as virtual
-
 	unsigned int spiBus;
 	unsigned int spiChipSelect;
 	int spiFileDescriptor;
@@ -37,6 +47,13 @@ private:
 	uint8_t bitsPerWord;
 	uint32_t clkFreq;
 	uint16_t delay;
+	const string slotsPath = "/sys/devices/bone_capemgr.9/slots";
+
+
+	void openSpiDevice(string fileName);
+	void close();
+	void transferData(unsigned char* outgoingData, unsigned char* incomingData, int lenght); // Note: if unsigned char receive = 0x00 is passed as a parameter a segfault will occur unless this function is dclared as virtual
+	void deployOverlay(string overlay);
 
 public:
 	SPI(unsigned int bus, unsigned int chipSeclect);

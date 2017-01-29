@@ -20,7 +20,7 @@ double getTempC(unsigned char* rawTempData);
 
 int main()
 {
-	SPI tc77(2,0);
+	SPI tc77(1,0);
 
 	tc77.format(8,SPI_MODE_0);
 	tc77.frequency(100000);
